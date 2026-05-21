@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    
+    <title>Agile Task Dashboard & Meeting Copilot</title>
+
+</head>
+<body>
+    <!-- Main Application Header -->
+    <header>
+        <div>
+            <h1>Agile Project Hub</h1>
+            <div class="subtitle">Sprint Control &amp; Centro Operativo Semanal</div>
+        </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-kanban')">Tablero Kanban</button>
+            <button class="tab-btn" onclick="switchTab('tab-analytics')">Cargas &amp; Analíticas</button>
+            <button class="tab-btn" onclick="switchTab('tab-reports')">Minutas &amp; Reportes</button>
+        </div>
+        <button class="theme-btn" id="light-theme">🌙</button>
+    </header>
+
+    <!-- Top KPI Dashboard Rows -->
+    <div class="kpi-container">
+        <div class="kpi-card">
+            <div class="kpi-title">Progreso del Sprint</div>
+            <div class="kpi-value" id="kpi-progress">0%</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Tareas Bloqueadas</div>
+            <div class="kpi-value" id="kpi-blocked" style="color: var(--color-bloqueado);">0</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Alertas de Retraso</div>
+            <div class="kpi-value" id="kpi-delayed" style="color: var(--color-validacion);">0</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Total de Tareas</div>
+            <div class="kpi-value" id="kpi-total">0</div>
+        </div>
+    </div>
+
+    <!-- Pestaña 1: Tablero Kanban -->
+    <div id="tab-kanban" class="panel active">
+        <div class="board">
+            <!-- Pendiente -->
+            <div class="column" id="col-pendiente">
+                <div class="column-header">
+                    <div class="column-title-wrapper">
+                        <div class="column-dot" style="background: var(--color-pendiente);"></div>
+                        <div class="column-title">Pendiente</div>
+                    </div>
+                    <span class="column-count" id="count-pendiente">0</span>
+                </div>
+                <div class="task-list" id="list-pendiente"></div>
+            </div>
+            <!-- En proceso -->
+            <div class="column" id="col-proceso">
+                <div class="column-header">
+                    <div class="column-title-wrapper">
+                        <div class="column-dot" style="background: var(--color-proceso);"></div>
+                        <div class="column-title">En proceso</div>
+                    </div>
+                    <span class="column-count" id="count-proceso">0</span>
+                </div>
+                <div class="task-list" id="list-proceso"></div>
+            </div>
+            <!-- Bloqueado -->
+            <div class="column" id="col-bloqueado">
+                <div class="column-header">
+                    <div class="column-title-wrapper">
+                        <div class="column-dot" style="background: var(--color-bloqueado);"></div>
+                        <div class="column-title">Bloqueado</div>
+                    </div>
+                    <span class="column-count" id="count-bloqueado">0</span>
+                </div>
+                <div class="task-list" id="list-bloqueado"></div>
+            </div>
+            <!-- En validación -->
+            <div class="column" id="col-validacion">
+                <div class="column-header">
+                    <div class="column-title-wrapper">
+                        <div class="column-dot" style="background: var(--color-validacion);"></div>
+                        <div class="column-title">En validación</div>
+                    </div>
+                    <span class="column-count" id="count-validacion">0</span>
+                </div>
+                <div class="task-list" id="list-validacion"></div>
+            </div>
+            <!-- Finalizado -->
+            <div class="column" id="col-finalizado">
+                <div class="column-header">
+                    <div class="column-title-wrapper">
+                        <div class="column-dot" style="background: var(--color-finalizado);"></div>
+                        <div class="column-title">Finalizado</div>
+                    </div>
+                    <span class="column-count" id="count-finalizado">0</span>
+                </div>
+                <div class="task-list" id="list-finalizado"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pestaña 2: Cargas e Indicadores Rápidos -->
+    <div id="tab-analytics" class="panel">
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <h3>Balanceo de Carga (Tareas por Responsable)</h3>
+                <div id="analytics-workload"></div>
+            </div>
+            <div class="analytics-card">
+                <h3>Distribución de Riesgo del Sprint</h3>
+                <div id="analytics-risk"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pestaña 3: Automatización de Reportes y Actas -->
+    <div id="tab-reports" class="panel">
+        <div class="reports-container">
+            <div class="report-section">
+                <div class="report-header">
+                    <h3>Reporte Ejecutivo Automatizado</h3>
+                    <button class="btn-primary" onclick="generateExecutiveReport()">Compilar Informe</button>
+                </div>
+                <textarea id="executive-text" class="report-box" readonly placeholder="Haz clic en 'Compilar Informe' para generar la lectura de rendimiento..."></textarea>
+            </div>
+            <div class="report-section">
+                <div class="report-header">
+                    <h3>Acta de Acuerdos de la Reunión</h3>
+                </div>
+                <div class="form-group">
+                    <label>Notas Críticas / Bloqueos Declarados</label>
+                    <textarea id="meeting-notes" class="form-control" style="height: 380px; font-family: monospace; font-size:13px;" placeholder="Escribe aquí los acuerdos crudos de la mesa, ej:&#10;- Álex M. reporta que necesita apoyo en infraestructura externa.&#10;- Sofía G. finalizó pruebas locales."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="openModal()">+</button>
+
+    <!-- Modal Formulario de Tareas -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal">
+            <div class="modal-title">Registrar Nueva Tarea Técnica</div>
+            <form id="task-form" onsubmit="saveTask(event)">
+                <div class="form-group">
+                    <label>Título de la Tarea</label>
+                    <input type="text" id="form-title" class="form-control" required placeholder="Ej. Refactorizar persistencia base datos">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>Área Técnica</label>
+                        <select id="form-area" class="form-control">
+                            <option value="Desarrollo">Desarrollo</option>
+                            <option value="Infraestructura">Infraestructura</option>
+                            <option value="Soporte">Soporte</option>
+                        </select>
+                    </div>
+                <div class="form-group">
+                       <label>Responsable</label> 
+                       <input type="text" id="form-owner" class="form-control" list="owners-list" placeholder="Ej. Laura" required > 
+                       <datalist id="owners-list"></datalist>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>Prioridad</label>
+                        <select id="form-priority" class="form-control">
+                            <option value="Baja">Baja</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estado Inicial</label>
+                        <select id="form-status" class="form-control">
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="En proceso">En proceso</option>
+                            <option value="Bloqueado">Bloqueado</option>
+                            <option value="En validación">En validación</option>
+                            <option value="Finalizado">Finalizado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Fecha Límite</label>
+                    <input type="date" id="form-deadline" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Dependencias Cruzadas</label>
+                    <input type="text" id="form-deps" class="form-control" placeholder="Ej. Aprobación QA / Ninguna">
+                </div>
+                <div class="form-group">
+                    <label>Nivel de Riesgo Operativo</label>
+                    <select id="form-risk" class="form-control">
+                        <option value="Bajo">Bajo</option>
+                        <option value="Medio">Medio</option>
+                        <option value="Alto">Alto</option>
+                        <option value="Crítico">Crítico</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar Tarea</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Resource & Capacity Manager - IT Team</title>
+
+</head>
+<body>
+
+    <header>
+        <h1>Resource & Capacity Management</h1>
+        <p>Planificación operativa dinámica. Edita horarios y saldos de días directamente desde la matriz en tiempo real.</p>
+    </header>
+
+    <div class="layout">
+        <!-- Panel Izquierdo: Formulario de Registro -->
+        <div class="panel">
+            <h2>Registrar Nuevo Colaborador</h2>
+            <form id="resourceForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo</label>
+                    <input type="text" id="nombre" required placeholder="Ej. Laura Paz">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="area">Área</label>
+                        <select id="area" required>
+                            <option value="Infraestructura">Infraestructura</option>
+                            <option value="Desarrollo">Desarrollo</option>
+                            <option value="Soporte">Soporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="rol">Rol / Puesto</label>
+                        <input type="text" id="rol" required placeholder="Ej. DevOps, Frontend">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Horario Bloque 1 (Inicio - Fin)</label>
+                    <div class="form-row">
+                        <input type="time" id="h1_inicio" required value="09:00">
+                        <input type="time" id="h1_fin" required value="17:00">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Horario Bloque 2 (Opcional)</label>
+                    <div class="form-row">
+                        <input type="time" id="h2_inicio">
+                        <input type="time" id="h2_fin">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="backup">Persona Backup / Reemplazo</label>
+                    <input type="text" id="backup" placeholder="Ej. Jeison">
+                </div>
+
+                <div class="form-group">
+                    <label>Vacaciones Programadas</label>
+                    <div class="form-row">
+                        <input type="date" id="vac_inicio">
+                        <input type="date" id="vac_fin">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="vac_pendientes">Vacaciones Pendientes (Días)</label>
+                        <input type="number" id="vac_pendientes" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="festivos_deuda">Festivos en Deuda</label>
+                        <input type="number" id="festivos_deuda" min="0" value="0">
+                    </div>
+                </div>
+
+                <button type="submit">Añadir a la Matriz</button>
+            </form>
+        </div>
+
+        <!-- Panel Derecho: Listado Editable -->
+        <div class="panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                <h2>Matriz de Control y Cobertura Activa</h2>
+                <div class="filters">
+                    <label for="filterArea" style="font-size: 0.85rem; color: var(--text-muted);">Filtrar:</label>
+                    <select id="filterArea" onchange="renderTable()">
+                        <option value="Todos">Todas las Áreas</option>
+                        <option value="Infraestructura">Infraestructura</option>
+                        <option value="Desarrollo">Desarrollo</option>
+                        <option value="Soporte">Soporte</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="teamTable">
+                    <thead>
+                        <tr>
+                            <th>Colaborador</th>
+                            <th>Área / Rol</th>
+                            <th>Horarios de Jornada</th>
+                            <th>Backup</th>
+                            <th>Vacaciones Programadas</th>
+                            <th>Bolsa de Días (Saldos)</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Renderizado dinámico con campos interactivos -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
